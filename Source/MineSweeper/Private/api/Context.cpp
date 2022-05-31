@@ -8,7 +8,7 @@ void Context::BeginPlay()
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Connecting..."));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Connecting..."));
 
 	m_levels.insert({ {"Level 01", 1}, {"Level 02", 2}, {"Level 03", 3}, {"Level 04", 4} });
 	m_webSocket = std::make_unique<WebAPI>();
@@ -29,7 +29,7 @@ void Context::EndPlay()
 	{
 		return;
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Disconnecting..."));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Disconnecting..."));
 	m_currentState = ERequestTypes::Disconnecting;
 	m_webSocket->Disconnect();
 }
@@ -47,7 +47,7 @@ void Context::Play(FString level)
  		return;
  	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Creating New Level..."));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Creating New Level..."));
 	m_currentState = ERequestTypes::NewLevelStarting;
 	FString newLevelData = NewLevel + TEXT(" ") + FString::FromInt(levelPtr->second);
 	m_webSocket->Send(newLevelData);	
@@ -60,7 +60,7 @@ void Context::OpenCell(int x, int y)
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Opening Cell..."));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Opening Cell..."));
 
 	m_currentState = ERequestTypes::OpeningCell;
 	FString data = Open + TEXT(" ") + FString::FromInt(x) + TEXT(" ") + FString::FromInt(y);
@@ -78,7 +78,7 @@ void Context::OnConnect()
 	{
 		return;
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Connected"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Connected"));
 	m_isConnected = true;
 	m_currentState = ERequestTypes::Connected;
 	OnConnectionCompletedEvent.Broadcast(true);
@@ -90,7 +90,7 @@ void Context::OnDisconnect()
 	{
 		return;
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Disconnected"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Disconnected"));
 	m_isConnected = false;
 	m_currentState = ERequestTypes::None;
 	m_webSocket->OnConnectEvent.Remove(m_onConnectDelegateHandle);
@@ -107,13 +107,13 @@ void Context::OnDisconnect()
 
 void Context::OnError(const FString& errorMsg)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Error: ") + errorMsg);
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("Error: ") + errorMsg);
 	OnErrorEvent.Broadcast(errorMsg);
 }
 
 void Context::OnDataRecieved(const FString& msg)
 {	
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, msg);
+	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, msg);
 	if (m_currentState == ERequestTypes::NewLevelStarting)
 	{
 		if(msg.Contains(TEXT("OK")))
